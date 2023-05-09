@@ -1,0 +1,35 @@
+# RUNTIME COMMAND
+# pip install -r requirements.txt --use-deprecated=legacy-resolversp
+
+# FLASK SOCKET/IO 
+Flask==1.0.2
+Flask-Login==0.4.1
+Flask-Session==0.3.1
+Flask_SocketIO
+itsdangerous==1.1.0
+Jinja2==2.10
+MarkupSafe==1.1.0
+python-engineio
+python-socketio
+six==1.11.0
+Werkzeug==0.14.1
+
+
+# ORIGINAL ML LIBS
+# Flask==2.0.1
+scipy~=1.7.0
+Deprecated==1.2.12
+numpy~=1.19.5
+statsmodels~=0.12.2
+opencv_contrib_python==4.5.2.52
+matplotlib==3.3.3
+opencv-python~=4.5.2.54
+tensorflow
+keras~=2.4.3
+
+# websockets~=9.1
+# azure~=4.0.0
+pandas~=1.2.5
+Pillow~=8.2.0
+websockets~=9.1
+azure~=4.0.0

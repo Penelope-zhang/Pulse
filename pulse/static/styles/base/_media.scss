@@ -1,0 +1,87 @@
+$breakpoints: (
+  sm: (
+    sm: 320, // iPhone 5
+    md: 360, // Samsung Galaxy S7+. iPhone 6-X @ 375.
+    lg: 412, // Google Pixel. iPhone Plus @ 414.
+    xl: 480, // SAMSUNG Galaxy Note
+  ),
+  md: (
+    sm: 640,
+    md: 768, // iPad Portrait
+    lg: 920, 
+  ),
+  lg: (
+    sm: 1024, // iPad Pro Portrait, iPad Landscape
+    md: 1280, // Macbook 13"
+    ml: 1366, 
+    lg: 1440, // Macbook 15"
+    xl: 1680,
+  ),
+  xl: (
+    sm: 1920, // iMac 21"
+    md: 2048,
+    ml: 2560, // iMac 27"
+    lg: 2880,
+    xl: 3200,
+  )
+);
+
+@function getBreakpointValue($levelA, $levelB) {
+  @return map-get(map-get($breakpoints, $levelA), $levelB);
+}
+@function getBreakpoint($levelA, $levelB) {
+  @return getBreakpointValue($levelA, $levelB) + px;
+}
+@function getMediaQuery($direction: from, $levelA: lg, $levelB: sm) {
+  @if $levelA {
+    $breakpoint: map-get(map-get($breakpoints, $levelA), $levelB);
+    @if $direction == 'from' {
+      @return '(min-width: #{$breakpoint}px)';
+    } @else {
+      @return '(max-width: #{$breakpoint - 1}px)';
+    }
+  } @else {
+    @warn "getMedia must be supplied with at least level A breakpoint name."
+  }
+};
+@function getMediaQueryRange($fromA, $fromB, $uptoA, $uptoB) {
+  @return '(min-width: #{map-get(map-get($breakpoints,$fromA), $fromB)}px) and (max-width: #{map-get(map-get($breakpoints, $uptoA), $uptoB) - 1}px)';
+}
+
+$from-phone: getMediaQuery(from, sm, sm);
+$upto-phone: getMediaQuery(upto, sm, sm);
+$from-phone-md: getMediaQuery(from, sm, md);
+$upto-phone-md: getMediaQuery(upto, sm, md);
+$from-phone-lg: getMediaQuery(from, sm, lg);
+$upto-phone-lg: getMediaQuery(upto, sm, lg);
+
+$from-tablet: getMediaQuery(from, md, sm);
+$upto-tablet: getMediaQuery(upto, md, sm);
+$from-tablet-md: getMediaQuery(from, md, md);
+$upto-tablet-md: getMediaQuery(upto, md, md);
+$from-tablet-lg: getMediaQuery(from, md, lg);
+$upto-tablet-lg: getMediaQuery(upto, md, lg);
+
+$from-desktop: getMediaQuery(from, lg, sm);
+$upto-desktop: getMediaQuery(upto, lg, sm);
+$from-desktop-md: getMediaQuery(from, lg, md);
+$upto-desktop-md: getMediaQuery(upto, lg, md);
+$from-desktop-lg: getMediaQuery(from, lg, lg);
+$upto-desktop-lg: getMediaQuery(upto, lg, lg);
+$from-desktop-xl: getMediaQuery(from, xl, md);
+$upto-desktop-xl: getMediaQuery(upto, xl, md);
+
+$phone: $from-phone;
+$phone-md: $from-phone-md;
+$phone-lg: $from-phone-lg;
+$tablet: $from-tablet;
+$tablet-md: $from-tablet-md;
+$tablet-lg: $from-tablet-lg;
+$desktop: $from-desktop;
+$desktop-md: $from-desktop-md;
+$desktop-lg: $from-desktop-lg;
+$desktop-xl: $from-desktop-xl;
+
+$only-phone: $upto-tablet;
+$only-tablet: getMediaQueryRange(md,sm,lg,sm);
+$only-desktop: $from-desktop;

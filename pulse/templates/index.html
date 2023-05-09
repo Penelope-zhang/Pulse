@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Pulse | A Web Based Health Diagnostic Tool</title>
+    <link rel="preconnect" href="https://fonts.gstatic.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;500&display=swap"
+      rel="stylesheet"
+    />
+    <!-- SOCKETIO -->
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"
+      integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg=="
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/3.0.4/socket.io.js"
+      integrity="sha512-aMGMvNYu8Ue4G+fHa359jcPb1u+ytAF+P2SCb+PxrjCdO3n3ZTxJ30zuH39rimUggmTwmh2u7wvQsDTHESnmfQ=="
+      crossorigin="anonymous"
+    ></script>
+    
+    <!-- GDPR / COOKIE Policy -->
+    <script src="/static/assets/scripts/gdpr-manager-script-1.1.0.js"></script>
+    <script src="/pulse/static/assets/scripts/gdpr-manager-script-1.1.0.js"></script>
+
+    <!-- FLASK ENV VISIBLE -->
+    <link rel="stylesheet" href="/static/assets/styles/pulse-style.css" />
+    <!-- WEBPACK VISIBLE -->
+    <link rel="stylesheet" href="/pulse/static/assets/styles/pulse-style.css" />
+
+    <script>
+      // Include after above gdpr-consent-script.js line.
+      // If you are testing and have clicked 'I consent', you can either open the site in an incognito tab, or run GDPR_CONSENT.reset() in your console to clear the local storage key. Refresh afterwards and you will see the banner again.
+      GDPR_MANAGER.init({
+        // delay: 1000, /** milliseconds to delay the banner from appearing. This only delays the banner and does not delay the onConsentValid function. */
+        banner: {
+          title:
+            '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M9 8C9 6.34315 10.3431 5 12 5C13.6569 5 15 6.34315 15 8V9C15 9.55228 14.5523 10 14 10H10C9.44772 10 9 9.55228 9 9V8ZM6 10C6.55228 10 7 9.55228 7 9V8C7 5.23858 9.23858 3 12 3C14.7614 3 17 5.23858 17 8V9C17 9.55228 17.4477 10 18 10V10C18.5523 10 19 10.4477 19 11V17C19 18.6569 17.6569 20 16 20H8C6.34315 20 5 18.6569 5 17V11C5 10.4477 5.44772 10 6 10V10ZM12 17C11.4477 17 11 16.5523 11 16V14C11 13.4477 11.4477 13 12 13V13C12.5523 13 13 13.4477 13 14V16C13 16.5523 12.5523 17 12 17V17Z" fill="white"/></svg>GDPR Consent',
+          bodyHtml: "<p>Pulse is a part of a UCD's master program to a non-invasive and non-contact web-driven solution that calculates a person's heartbeat and mood through video has many beneficial factors for cross-industries, such as telemedicine. We DO NOT STORE any personally identifiable data (PII); your participation is of your agreement. You agree NOT TO disclose, share or distribute the applications design or workings outside of the applications direct usage.</p>",
+          showRemindMeLaterButton: false,
+          showManageButton: true,
+          style: {
+            backgroundColorFallback:
+              "#4A4181" /** used when backdrop blur is not available */,
+            backgroundColor:
+              "#4A4181" /** change the last number to adjust opacity, from 0 to 1 */,
+            backgroundImage:
+              "linear-gradient(336.96deg, #4A4181 -17.01%, #29234F 140.47%)",
+            backdropBlur: false /** Background color must be transparent for backdrop blur to work */,
+            foregroundColor: "#ffffff",
+            linkColor: "#009FE3",
+            headingColor: "inherit",
+            buttonBackgroundColor: "rgba(255,255,255,.15)",
+            buttonForegroundColor: "#ffffff",
+            buttonBorderRadius: "5px",
+          },
+        },
+        privacySettingsPanelConfig: {
+          title:
+            '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M9 8C9 6.34315 10.3431 5 12 5C13.6569 5 15 6.34315 15 8V9C15 9.55228 14.5523 10 14 10H10C9.44772 10 9 9.55228 9 9V8ZM6 10C6.55228 10 7 9.55228 7 9V8C7 5.23858 9.23858 3 12 3C14.7614 3 17 5.23858 17 8V9C17 9.55228 17.4477 10 18 10V10C18.5523 10 19 10.4477 19 11V17C19 18.6569 17.6569 20 16 20H8C6.34315 20 5 18.6569 5 17V11C5 10.4477 5.44772 10 6 10V10ZM12 17C11.4477 17 11 16.5523 11 16V14C11 13.4477 11.4477 13 12 13V13C12.5523 13 13 13.4477 13 14V16C13 16.5523 12.5523 17 12 17V17Z" fill="white"/></svg><span>Privacy Settings</span>',
+          style: {
+            panelBackgroundColor: "#4A4181",
+            panelForegroundColor: "#ffffff",
+            panelBackgroundImage:
+              "linear-gradient(356.95deg, #4A4181 -2.75%, #241D4B 99.82%);",
+          },
+          ESSENTIAL: {
+            description: [
+              "<p>Some cookies and similar technologies are used to run the website and application properly and cannot be turned off. This includes:</p>",
+              // "<p>- Our own cookies / storage entries for account and security related functionalities, application state and data caching. Data collected and used to ensure security, prevent fraud, and debug may include automatically-sent device characteristics for identification, precise geolocation data, and data obtained by actively scanning device characteristics for identification without separate disclosure and/or opt-in.</p>",
+              '<p>- Application error reporting: <a href="https://sentry.io/" title="Sentry.io" target="_blank" rel="noopener noreferrer">Sentry.io</a></p>',
+            ].join(""),
+          },
+          FACEBOOK_PIXEL: {
+            defaultOn: false,
+            description:
+              "Collects marketing and advertisement information. This helps us to get more users in need to find our services. You can know more about how Facebook Pixel manages cookies and user/device information on their website.",
+          },
+          GOOGLE: {
+            defaultOn: true,
+            description:
+              "Collects site traffic and usage information. This provides insight to where our visitors are coming from, and how everyone uses our services. This helps us to get more users in need to find our services, and understand our users better, which enables us to analyse and improve our service offerings for everyone. You can know more about how Google Analytics manages cookies and user/device information on their website.",
+          },
+          contentAfterSaveButton: [
+            "<p><em>* You can change above settings for this browser at any time by visiting the Privacy Settings page from the global menus available in different areas of the website and application.</em></p>",
+            "<h3>More Options</h3>",
+            '<a href="/privacy" title="GDPR & Privacy Policy">→ Read our GDPR & Privacy Policy</a>',
+          ].join(""),
+        },
+        reloadPageOnFirstConsent: true /** If you disable this option, the first page visit's analytics might not be accurate as the onConsentValid only runs when the consent is given. However, NOT reloading the page will provide a better user experience. */,
+        analyticalIDs: {
+          // GTAG: 'Remove or replace with your ID',
+          // GOOGLE_ANALYTICS: "Remove or replace with your ID",
+          // FACEBOOK_PIXEL: 'Remove or replace with your ID',
+        },
+      });
+      // GDPR_MANAGER.managePrivacySettings();
+    </script>
+  </head>
+  <body>
+    <div class="container">
+      <main>
+        <div class="pulse-video_start">
+          <div class="pulse-video_wrapper">
+            <div class="pulse-video_wrap_inner">
+              <div class="pulse-video_frame">
+                <video autoplay="true" id="videoElement" class="pulse-video_frame"></video>
+              </div>
+            </div>
+            <label class="expand p-icon pulse-red">
+              <svg
+                class="pulse-heart_svg"
+                width="48"
+                height="48"
+                viewBox="0 0 12 11"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M10.1086 5.9001C13.1448 2.88932 7.57844 -1.03953 6.00511 2.51322C4.7273 -0.695395 -1.29769 1.55912 1.9484 5.9001L6.00511 10L8.59051 7.49102"
+                  stroke="white"
+                  stroke-opacity="0.7"
+                  stroke-linejoin="round"
+                />
+              </svg>
+              <div class="p-bpm_text" id="p-bpm_text">
+                <div id="pulse-bpm_count" class="pulse-bpm_count"></div>
+              </div>
+              <div class="pulse-inner_container">
+                <input type="checkbox" id="expand" />
+                <div class="pulse-circle pulse-bpm_counter" for="expand">
+                  <div class="pulse-statistics">
+                    <strong>Pulse <small>health diagnostics</small></strong>
+                    
+                    <div class="pulse-meta_data">
+                      <div>
+                        <span class="pulse-meta_data_info">Info</span>
+                        <div id="pulse-meta_data_age"></div>
+                        <div id="pulse-meta_data_emotion"></div>
+                        <div id="pulse-meta_data_gender"></div>
+                        
+                        <div id="pulse-meta_data_rest_bpm"></div>
+                        <div id="pulse-meta_data_elevated_bpm"></div>
+                      </div>
+                      <div>
+                        <!-- <span class="pulse-meta_data_info"
+                        >About Resting Heart Rate</span
+                        >
+                        <p>
+                          Your resting heart rate is the averagte heart beats
+                          per minute measured when you’ve been inactive or
+                          relaxed for several minutes. A lower resting heart
+                          typically indicates a better heart health and
+                          caridiovascular fitness.
+                        </p> -->
+                      </div>
+                    </div>
+                    <div>
+                      <div id="chartdiv" hidden></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </label>
+          </div>
+        </div>
+        <div class="meta-data">
+          <h1>pulse analysis software</h1>
+          <p>
+            <a onclick="GDPR_MANAGER.managePrivacySettings()"
+              ><strong>Privacy Settings</strong></a
+            >
+            •
+            <a onclick="GDPR_MANAGER.reset()"><strong>Reset Consent</strong></a>
+          </p>
+        </div>
+      </main>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="../static/assets/scripts/pulse-app.js"></script>
+    <!-- <script src="pulse/static/assets/scripts/pulse-app.js"></script> -->
+  </body>
+</html>

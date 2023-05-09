@@ -1,0 +1,79 @@
+$unit: 4.8rem;
+
+$sizes: (
+  xs: $unit / 6,
+  sm: (
+    default: $unit / 5,
+    md: $unit / 4,
+  ),
+
+  md: (
+    default: $unit / 4.5,
+    md: $unit / 3.5,
+    lg: $unit / 2.19,
+  ),
+  
+  ml: (
+    default: $unit / 3,
+    md: $unit / 1.875,
+  ),
+  lg: (
+    default: $unit / 1.875,
+    md: $unit / 1.5,
+    lg: $unit / 1,
+  ),
+  xl: (
+    default: $unit / 1,
+    md: $unit / .75,
+    lg: $unit / .618,
+  ),
+);
+@function getSize($value, $multiplier: 1) {
+  @if $multiplier == 1 {
+    @return var(--size-#{$value});
+  } @else {
+    @return calc(var(--size-#{$value}) * #{$multiplier});
+  }
+};
+
+@function size($value, $multiplier: 1) {
+  $result: getSize($value, $multiplier);
+  @return $result;
+}
+
+@function spacing($value, $multiplier: 1) {
+  @return getSize($value, $multiplier);
+}
+
+@mixin inlineUnit($property, $side, $value) {
+  @if ($side != start and $side != end) {
+    @error "The $side param must be either 'start' or 'end', '#{$side}' given.";
+  }
+  $declaration: '(#{$property}-inline-#{$side}: #{$value})';
+  @supports (#{$declaration}) {
+    #{$property}-inline-#{$side}: $value;
+  }
+  @supports not (#{$declaration}) {
+    @if ($side == 'start') {
+      #{$property}-left: $value;
+      [dir=rtl] & {
+        #{$property}-right: $value;
+      }
+    } @else if ($side == 'end') {
+      #{$property}-right: $value;
+      [dir=rtl] & {
+        #{$property}-left: $value;
+      }
+    }
+  }
+}
+
+@mixin marginInline($side, $value) {
+  @include inlineUnit(margin, $side, $value);
+}
+@mixin borderInline($side, $value) {
+  @include inlineUnit(border, $side, $value);
+}
+@mixin paddingInline($side, $value) {
+  @include inlineUnit(padding, $side, $value);
+}

@@ -1,0 +1,72 @@
+* {
+  box-sizing: border-box;
+}
+
+:root {
+  font-family: "Mukta Vaani", sans-serif;
+  font-size: 10px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  color: $grey;
+  --SiteNavHeight:5em;
+  line-height: 1.19;
+  @media #{$tablet} {
+    --SiteNavHeight: 7em;
+  }
+}
+
+body {
+  font-size: 1.4rem;
+}
+
+:root {
+  /* units and sizes */
+  --size-unit: 4.8rem;
+  @each $name, $value in $sizes {
+    @if (type-of($value) == 'map') {
+      @each $breakpoint, $breakpointValue in $value {
+        @if ($breakpoint == 'default') {
+          --size-#{$name}: #{$breakpointValue};
+        } @else {
+          @media #{getMediaQuery('from', $breakpoint)} {
+            --size-#{$name}: #{$breakpointValue};
+          }
+        }
+      }
+    } @else {
+      --size-#{$name}: #{$value};
+    }
+  }
+}
+
+h1, h2, h3, h4, h5, h6 {
+  margin: 0;
+}
+
+p {
+  margin: 0;
+  font-weight: 300;
+  line-height: 1.38;
+  font-size: 1.4rem;
+  @media #{$desktop} {
+    font-size: 1.8rem;
+  }
+}
+
+img {
+  max-width: 100%;
+}
+
+figure {
+  margin: 0;
+  padding: 0;
+}
+
+.container {
+  max-width: 1280px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: size(lg);
+  padding-right: size(lg);
+}
+

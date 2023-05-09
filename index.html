@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Flask-SocketIO Test</title>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"
+      integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg=="
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/3.0.4/socket.io.js"
+      integrity="sha512-aMGMvNYu8Ue4G+fHa359jcPb1u+ytAF+P2SCb+PxrjCdO3n3ZTxJ30zuH39rimUggmTwmh2u7wvQsDTHESnmfQ=="
+      crossorigin="anonymous"
+    ></script>
+  </head>
+  <body>
+      
+    <h2>Video Feed <small>direct</small></h2>
+    <video autoplay="true" id="videoElement"></video>
+
+    <script type="text/javascript" charset="utf-8">
+      var video = document.querySelector("#videoElement");
+      video.width = 500;
+      video.height = 375;
+
+      if (navigator.mediaDevices.getUserMedia) {
+        navigator.mediaDevices
+          .getUserMedia({ video: true })
+          .then(function (stream) {
+        
+            video.srcObject = stream;
+            console.log(loop++);
+
+        })
+        .catch(function (err0r) {
+            console.log("Something went wrong!");
+        });
+    }
+    </script>
+  </body>
+</html>
